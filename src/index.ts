@@ -7,6 +7,12 @@ import moment from 'moment'
 import path from 'path'
 import shelljs from 'shelljs'
 
+interface ExecAsync {
+  code: number
+  stdout: string
+  stderr: string
+}
+
 /**
  * ShellJS exec wrapper in Async
  * @param cmd Command to run
@@ -28,39 +34,45 @@ export const asyncForEach = async (array: any[], callback: CallableFunction) => 
   }
 }
 
+export const differenceInHours = (previousDate: Date) => {
+  const currentDate = (new Date() as any) as number
+  const oldDate = (previousDate as any) as number
+  const result = ((Math.abs(oldDate - currentDate) / (60 * 60 * 1000)) as any) as string
+  return Number(parseFloat(result).toFixed(2))
+}
 /**
- * Splits an array into multiple untill it is within 1024 characters
- * @param array Array to split
+ * Splits an array into multiple based on max character limit
  */
-export const arraySplitter = (array: any[]) => {
+export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
   // Initial page size
-  let pageSize = 40
+  let pageSize = 200
   // Split array into multiple even arrays
-  let splitArray = chunkArray(array, pageSize)
+  let splitArray = splitArrayToSize(array, pageSize)
   // Dynamically adjust page size based on length of each array
   let willFit = false
+
   while (!willFit) {
     let sizeInRange = true
     for (const i of splitArray) {
-      if (i.join().length > 1024) sizeInRange = false
+      if (i.join().length > maxCharacters) sizeInRange = false
     }
 
     if (sizeInRange) willFit = true
     else {
       pageSize--
-      splitArray = chunkArray(array, pageSize)
+      splitArray = splitArrayToSize(array, pageSize)
     }
   }
   return splitArray
 }
 
 /**
- * Split array into equal chunks
+ * Split array into multiple equally sized arrays
  * @param myArray Array to split
  * @param chunkSize size of each split
  * @returns
  */
-export const chunkArray = (myArray: any[], chunkSize: number) => {
+export const splitArrayToSize = (myArray: any[], chunkSize: number) => {
   let index
   const arrayLength = myArray.length
   const tempArray: any[] = []
@@ -87,7 +99,7 @@ export const findFilesByType = (dir: string, pattern: string) => {
     const stat = fs.statSync(innerDir)
 
     if (stat.isDirectory()) {
-      results = results.concat(this.findNested(innerDir, pattern))
+      results = results.concat(findFilesByType(innerDir, pattern))
     }
 
     if (stat.isFile() && innerDir.endsWith(pattern)) results.push(innerDir)

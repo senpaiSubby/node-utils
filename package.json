@@ -37,7 +37,13 @@
       "lib"
     ]
   },
-  "keywords": [],
+  "keywords": [
+    "utils",
+    "date",
+    "time",
+    "shell",
+    "conversion"
+  ],
   "license": "ISC",
   "main": "lib/index.js",
   "name": "@callmekory/utils",
@@ -56,5 +62,5 @@
     "version": "npm run format && git add -A src"
   },
   "types": "lib",
-  "version": "1.0.9"
+  "version": "1.1.4"
 }

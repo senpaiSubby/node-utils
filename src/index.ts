@@ -24,6 +24,44 @@ export const execAsync = async (cmd: string, opts: shelljs.ExecOptions = {}): Pr
   })
 
 /**
+ * Adds ordinal suffix to number. Ex 17 would become 17th.
+ * @param number Number to add suffix to
+ */
+export const ordinalSuffix = (num: number) => {
+  if (num === 0) return 0
+
+  const j = num % 10
+  const k = num % 100
+
+  if (j === 1 && k !== 11) return `${num}st`
+
+  if (j === 2 && k !== 12) return `${num}nd`
+
+  if (j === 3 && k !== 13) return `${num}rd`
+
+  return `${num}th`
+}
+
+/**
+ * Filters an array based on list of keywords
+ * @param array Array to filter
+ * @param keywords List of keywords for search
+ */
+export const filterByKeywords = (array: any[], keywords: any[]) =>
+  array.filter((item) => {
+    let matches = 0
+
+    // Check each keyword against array item
+    keywords.forEach((term) => {
+      const reg = new RegExp(term, 'gmi')
+      if (item.match(reg)) matches++
+    })
+
+    // If item matches all keywords return item to list
+    if (matches === keywords.length) return item
+  })
+
+/**
  * ForEach method made asynchronous
  * @param array Array to iterate over
  * @param callback Callback function for data use
@@ -34,6 +72,10 @@ export const asyncForEach = async (array: any[], callback: CallableFunction) => 
   }
 }
 
+/**
+ * Calulates time in hours between 2 dates
+ * @param previousDate previous Date object
+ */
 export const differenceInHours = (previousDate: Date) => {
   const currentDate = (new Date() as any) as number
   const oldDate = (previousDate as any) as number
@@ -47,7 +89,7 @@ export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
   // Initial page size
   let pageSize = 200
   // Split array into multiple even arrays
-  let splitArray = splitArrayToSize(array, pageSize)
+  let splitArray = chunkArray(array, pageSize)
   // Dynamically adjust page size based on length of each array
   let willFit = false
 
@@ -60,7 +102,7 @@ export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
     if (sizeInRange) willFit = true
     else {
       pageSize--
-      splitArray = splitArrayToSize(array, pageSize)
+      splitArray = chunkArray(array, pageSize)
     }
   }
   return splitArray
@@ -68,18 +110,19 @@ export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
 
 /**
  * Split array into multiple equally sized arrays
- * @param myArray Array to split
- * @param chunkSize size of each split
+ * @param array Array to split
+ * @param splitAmount Times to split array
  * @returns
  */
-export const splitArrayToSize = (myArray: any[], chunkSize: number) => {
+export const chunkArray = (array: any[], splitAmount: number) => {
   let index
-  const arrayLength = myArray.length
+  const arrayLength = array.length
   const tempArray: any[] = []
-  let myChunk: any[]
-  for (index = 0; index < arrayLength; index += chunkSize) {
-    myChunk = myArray.slice(index, index + chunkSize)
-    tempArray.push(myChunk)
+  let splitArrays: any[]
+
+  for (index = 0; index < arrayLength; index += splitAmount) {
+    splitArrays = array.slice(index, index + splitAmount)
+    tempArray.push(splitArrays)
   }
 
   return tempArray
@@ -88,9 +131,9 @@ export const splitArrayToSize = (myArray: any[], chunkSize: number) => {
 /**
  * Finds nested files in a directory matching the pattern specified
  * @param dir Path of directory
- * @param pattern Math pattern for file extension
+ * @param extention Extension to find
  */
-export const findFilesByType = (dir: string, pattern: string) => {
+export const findFilesByType = (dir: string, extention: string) => {
   let results: any[] = []
 
   fs.readdirSync(dir).forEach((innerDir) => {
@@ -99,22 +142,22 @@ export const findFilesByType = (dir: string, pattern: string) => {
     const stat = fs.statSync(innerDir)
 
     if (stat.isDirectory()) {
-      results = results.concat(findFilesByType(innerDir, pattern))
+      results = results.concat(findFilesByType(innerDir, extention))
     }
 
-    if (stat.isFile() && innerDir.endsWith(pattern)) results.push(innerDir)
+    if (stat.isFile() && innerDir.endsWith(extention)) results.push(innerDir)
   })
   return results
 }
 
 /**
- * Add's a set ammount of spaces
+ * Adds a set ammount of spaces
  * @param count Number of spaces to add
  */
 export const addSpace = (count: number) => ' '.repeat(count)
 
 /**
- * Capitalized the first letter of a string
+ * Capitalize the first letter of a string
  * @param text Text to capitalize the first letter of
  */
 export const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()

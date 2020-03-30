@@ -24,6 +24,18 @@ export const execAsync = async (cmd: string, opts: shelljs.ExecOptions = {}): Pr
   })
 
 /**
+ * Picks a random item from aray
+ * @param array Array to choose a random item from
+ */
+export const random = (array: any[]) => array[Math.floor(Math.random() * array.length)]
+
+/**
+ * Generates a random number between 1 and specified max
+ * @param max max random number
+ */
+export const randomNumber = (max:number) => Math.floor(Math.random() * Math.floor(max));
+
+/**
  * Adds ordinal suffix to number. Ex 17 would become 17th.
  * @param number Number to add suffix to
  */
@@ -82,6 +94,7 @@ export const differenceInHours = (previousDate: Date) => {
   const result = ((Math.abs(oldDate - currentDate) / (60 * 60 * 1000)) as any) as string
   return Number(parseFloat(result).toFixed(2))
 }
+
 /**
  * Splits an array into multiple based on max character limit
  */
@@ -198,7 +211,7 @@ export const sortByKey = (array: any[], key: string) => {
 export const groupByProperty = (array: any[], property: string | number) => {
   const hash: any[] = []
 
-  array.forEach((item, index) => {
+  array.forEach((_item, index) => {
     if (!hash[array[index][property]]) hash[array[index][property]] = []
     hash[array[index][property]].push(array[index])
   })

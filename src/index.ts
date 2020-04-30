@@ -33,7 +33,7 @@ export const random = (array: any[]) => array[Math.floor(Math.random() * array.l
  * Generates a random number between 1 and specified max
  * @param max max random number
  */
-export const randomNumber = (max:number) => Math.floor(Math.random() * Math.floor(max));
+export const randomNumber = (max: number) => Math.floor(Math.random() * Math.floor(max))
 
 /**
  * Adds ordinal suffix to number. Ex 17 would become 17th.
@@ -124,17 +124,17 @@ export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
 /**
  * Split array into multiple equally sized arrays
  * @param array Array to split
- * @param splitAmount Times to split array
+ * @param arraySize Length of each array
  * @returns
  */
-export const chunkArray = (array: any[], splitAmount: number) => {
+export const chunkArray = (array: any[], arraySize: number) => {
   let index
   const arrayLength = array.length
   const tempArray: any[] = []
   let splitArrays: any[]
 
-  for (index = 0; index < arrayLength; index += splitAmount) {
-    splitArrays = array.slice(index, index + splitAmount)
+  for (index = 0; index < arrayLength; index += arraySize) {
+    splitArrays = array.slice(index, index + arraySize)
     tempArray.push(splitArrays)
   }
 
@@ -160,6 +160,27 @@ export const findFilesByType = (dir: string, extention: string) => {
 
     if (stat.isFile() && innerDir.endsWith(extention)) results.push(innerDir)
   })
+  return results
+}
+
+/**
+ * Walks a direcoty recusively and returns paths to all files
+ * @param dir Directory to walk
+ */
+export const walk = (dir: string) => {
+  let results: any[] = []
+
+  fs.readdirSync(dir).forEach(function (innerDir) {
+    innerDir = path.resolve(dir, innerDir)
+    const stat = fs.statSync(innerDir)
+
+    if (stat.isDirectory()) {
+      results = results.concat(walk(innerDir))
+    }
+
+    if (stat.isFile()) results.push(innerDir)
+  })
+
   return results
 }
 

@@ -58,7 +58,7 @@ export const sleep = async (ms: number): Promise<any> => new Promise((resolve) =
 export const millisecondsToTime = (ms: number) => {
   const duration = moment.duration(ms)
   if (duration.asHours() > 1) {
-    return Math.floor(duration.asHours()) + moment.utc(duration.asMilliseconds()).format(':mm:ss')
+    return `${Math.floor(duration.asHours())}${moment.utc(duration.asMilliseconds()).format(':mm:ss')}`
   }
 
   return moment.utc(duration.asMilliseconds()).format('mm:ss')
@@ -108,7 +108,7 @@ export const diffInMinutes = (date1: Date, date2: Date, round = false) => {
  * @param round Whether to round the return difference. Defaults to false.
  */
 export const diffInSeconds = (date1: Date, date2: Date, round = false) => {
-  let diff = (date1.getTime() - date2.getTime()) / 1000
+  const diff = (date1.getTime() - date2.getTime()) / 1000
   if (round) return Math.abs(Math.round(diff))
   return Math.abs(diff)
 }
@@ -120,7 +120,7 @@ export const diffInSeconds = (date1: Date, date2: Date, round = false) => {
  * @param round Whether to round the return difference. Defaults to false.
  */
 export const diffInMilliseconds = (date1: Date, date2: Date, round = false) => {
-  let diff = date1.getTime() - date2.getTime()
+  const diff = date1.getTime() - date2.getTime()
   if (round) return Math.abs(Math.round(diff))
   return Math.abs(diff)
 }
@@ -224,7 +224,7 @@ export const walk = (dir: string) => {
  * @param key Key to sort by
  */
 export const sortByKey = (array: any[], key: string) => {
-  let sortOrder: number = 0
+  let sortOrder = 0
 
   if (key[0] === '-') {
     sortOrder = -1
@@ -353,7 +353,7 @@ export const splitArrayToCharLimit = (array: any[], maxCharacters: number) => {
  * @returns
  */
 export const chunkArray = (array: any[], arraySize: number) => {
-  let index
+  let index: number
   const arrayLength = array.length
   const tempArray: any[] = []
   let splitArrays: any[]

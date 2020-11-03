@@ -20,22 +20,17 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
+    "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
   },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "lib"
-    ]
-  },
   "dependencies": {
-    "@types/shelljs": "^0.8.8",
     "moment": "^2.29.1"
   },
   "devDependencies": {
     "@types/node": "^13.13.4",
+    "@types/shelljs": "^0.8.8",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/eslint-plugin-tslint": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",

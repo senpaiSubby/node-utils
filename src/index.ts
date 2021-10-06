@@ -21,9 +21,13 @@ export const execAsync = async (cmd: string, opts: shelljs.ExecOptions = {}): Pr
 
 /**
  * Generates a random number between 1 and specified max
- * @param max max random number
+ * @param min OPTIONAL: lowest possible number, defaults to 0
+ * @param max highest possible number
  */
-export const randomNumber = (max: number) => Math.floor(Math.random() * Math.floor(max))
+export const randomNumber = (min?:number, max: number) => {
+  !min ? min = 0 : null
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
 
 /**
  * ForEach method made asynchronous
